@@ -6,10 +6,10 @@ def get_distribution(dist):
     """Return a PyMC distribution."""
     if isinstance(dist, str):
         if hasattr(pm, dist):
-            dist = getattr(pm, dist)
-        else:
-            raise ValueError(f"The Distribution '{dist}' was not found in PyMC")
-    return dist
+            return getattr(pm, dist)
+
+    if isinstance(dist, pm.Distribution):
+        return dist
 
 
 def has_hyperprior(kwargs):
