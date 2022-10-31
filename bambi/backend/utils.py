@@ -8,8 +8,7 @@ def get_distribution(dist):
         if hasattr(pm, dist):
             return getattr(pm, dist)
 
-    if isinstance(dist, pm.Distribution):
-        return dist
+    return dist
 
 
 def has_hyperprior(kwargs):
