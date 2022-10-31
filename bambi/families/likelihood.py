@@ -45,17 +45,26 @@ class Likelihood:
     DISTRIBUTIONS = DISTRIBUTIONS
 
     def __init__(self, name, parent=None, **kwargs):
-        if name in self.DISTRIBUTIONS:
-            self.name = name
-            self.parent = parent
-            self.priors = self._check_priors(kwargs)
-        else:
-            # On your own risk
-            self.name = name
-            # Check priors passed are in fact of class Prior
-            check_all_are_priors(kwargs)
-            self.priors = kwargs
-            self.parent = parent
+
+        if isinstance(name, str):
+            if name in self.DISTRIBUTIONS:
+                self.name = name
+                self.parent = parent
+                self.priors = self._check_priors(kwargs)
+            else:
+                # On your own risk
+                self.name = name
+                # Check priors passed are in fact of class Prior
+                check_all_are_priors(kwargs)
+                self.priors = kwargs
+                self.parent = parent
+
+            return
+
+        self.name = name
+        check_all_are_priors(kwargs)
+        self.priors = kwargs
+        self.parent = parent
 
     @property
     def parent(self):
@@ -95,7 +104,11 @@ class Likelihood:
         return priors
 
     def __str__(self):
-        args = [f"name: {self.name}", f"parent: {self.parent}", f"priors: {self.priors}"]
+        args = [
+            f"name: {self.name if isinstance(self.name, str) else self.name.name}",
+            f"parent: {self.parent}",
+            f"priors: {self.priors}",
+        ]
         return f"{self.__class__.__name__}({spacify(multilinify(args))}\n)"
 
     def __repr__(self):
